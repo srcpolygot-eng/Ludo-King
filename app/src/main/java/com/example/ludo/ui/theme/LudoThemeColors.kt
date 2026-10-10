@@ -108,11 +108,45 @@ object LudoThemePalettes {
         dicePip = Color(0xFF3D405B)
     )
 
+    val MIDNIGHT = LudoBoardPalette(
+        theme = BoardTheme.MIDNIGHT,
+        boardBackground = Color(0xFF0A0E17),
+        boardBorder = Color(0xFF7C4DFF),
+        trackCellBg = Color(0xFF121826),
+        trackCellBorder = Color(0xFF1F2A40),
+        starSafeColor = Color(0xFFB388FF),
+        redColor = Color(0xFFFF5252),
+        greenColor = Color(0xFF69F0AE),
+        yellowColor = Color(0xFFFFD740),
+        blueColor = Color(0xFF40C4FF),
+        baseInsideBg = Color(0xFF0D121C),
+        diceBg = Color(0xFF1A2233),
+        dicePip = Color(0xFFB388FF)
+    )
+
+    val CANDY = LudoBoardPalette(
+        theme = BoardTheme.CANDY,
+        boardBackground = Color(0xFFFFF0F5),
+        boardBorder = Color(0xFFFF69B4),
+        trackCellBg = Color(0xFFFFFFFF),
+        trackCellBorder = Color(0xFFFFC0CB),
+        starSafeColor = Color(0xFFFF1493),
+        redColor = Color(0xFFFF1744),
+        greenColor = Color(0xFF00E676),
+        yellowColor = Color(0xFFFFEA00),
+        blueColor = Color(0xFF2979FF),
+        baseInsideBg = Color(0xFFFFF5F8),
+        diceBg = Color(0xFFFFFFFF),
+        dicePip = Color(0xFFFF69B4)
+    )
+
     fun getPalette(theme: BoardTheme): LudoBoardPalette = when (theme) {
         BoardTheme.CLASSIC -> CLASSIC
         BoardTheme.WOODEN -> WOODEN
         BoardTheme.NEON -> NEON
         BoardTheme.ROYAL -> ROYAL
         BoardTheme.NATURE -> NATURE
+        BoardTheme.MIDNIGHT -> MIDNIGHT
+        BoardTheme.CANDY -> CANDY
     }
 }

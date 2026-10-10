@@ -108,10 +108,16 @@ data class Player(
     val color: PlayerColor,
     val isAi: Boolean,
     val difficulty: AiDifficulty = AiDifficulty.MEDIUM,
-    val tokens: List<Token> = List(4) { Token(id = it, color = color) }
+    val tokens: List<Token> = List(4) { Token(id = it, color = color) },
+    val tokenSkin: TokenSkin = TokenSkin.CLASSIC,
+    val powerUps: List<PowerUp> = emptyList(),
+    val shieldedTokenIds: Set<Int> = emptySet(),
+    val boostPending: Boolean = false,
+    val luckySixPending: Boolean = false
 ) {
     val tokensHomeCount: Int get() = tokens.count { it.isHome }
     val hasWon: Boolean get() = tokensHomeCount == 4
+    val team: Team get() = Teams.teamFor(color)
 }
 
 enum class GamePhase {
@@ -126,7 +132,9 @@ enum class GameMode(val title: String, val subtitle: String) {
     VS_COMPUTER("Play vs Computer", "Challenge intelligent AI players"),
     PASS_AND_PLAY("Pass & Play", "Local multiplayer with 2–4 players on one phone"),
     COMPUTER_ONLY("Watch AI Battle", "Automated AI match with speed control"),
-    QUICK_GAME("Quick Match", "Jump straight into a fast-paced game")
+    QUICK_GAME("Quick Match", "Jump straight into a fast-paced game"),
+    TEAM_MODE("Team Mode", "2v2 alliance — Red+Yellow vs Green+Blue"),
+    ARCADE("Arcade", "Power-ups, timer pressure & special dice")
 }
 
 data class GameRules(
@@ -134,7 +142,11 @@ data class GameRules(
     val extraTurnOnCapture: Boolean = true,
     val extraTurnOnHome: Boolean = true,
     val threeConsecutiveSixesForfeit: Boolean = true,
-    val safeSquaresEnabled: Boolean = true
+    val safeSquaresEnabled: Boolean = true,
+    val turnTimerEnabled: Boolean = false,
+    val turnTimerSeconds: Int = 30,
+    val powerUpsEnabled: Boolean = false,
+    val teamModeEnabled: Boolean = false
 )
 
 enum class BoardTheme(val displayName: String) {
@@ -142,5 +154,52 @@ enum class BoardTheme(val displayName: String) {
     WOODEN("Wooden"),
     NEON("Neon Glow"),
     ROYAL("Royal Marble"),
-    NATURE("Nature Oasis")
+    NATURE("Nature Oasis"),
+    MIDNIGHT("Midnight"),
+    CANDY("Candy Pop")
+}
+
+/** Token visual skin — cosmetic only. */
+enum class TokenSkin(val displayName: String, val emoji: String) {
+    CLASSIC("Classic", "●"),
+    CROWN("Crown", "👑"),
+    STAR("Star", "⭐"),
+    GEM("Gem", "💎"),
+    FLAME("Flame", "🔥"),
+    ICE("Ice", "❄️"),
+    DRAGON("Dragon", "🐉"),
+    ROBOT("Robot", "🤖")
+}
+
+/** Arcade / special power-ups (Ludo King style). */
+enum class PowerUpType(val displayName: String, val description: String, val emoji: String) {
+    DOUBLE_DICE("Double Dice", "Roll two dice and pick the best result", "🎲"),
+    SHIELD("Shield", "Protect one token from capture for 1 turn", "🛡️"),
+    BOOST("Boost", "Move +2 extra steps on your next move", "🚀"),
+    SWAP("Swap", "Swap positions with an opponent token", "🔄"),
+    FREEZE("Freeze", "Skip the next opponent's turn", "❄️"),
+    LUCKY_SIX("Lucky Six", "Guaranteed 6 on your next roll", "✨")
+}
+
+data class PowerUp(
+    val type: PowerUpType,
+    val charges: Int = 1
+)
+
+/** Team alliances for 2v2 mode. */
+enum class TeamId { TEAM_A, TEAM_B }
+
+data class Team(
+    val id: TeamId,
+    val name: String,
+    val colors: List<PlayerColor>
+) {
+    fun contains(color: PlayerColor) = colors.contains(color)
+}
+
+object Teams {
+    val TEAM_A = Team(TeamId.TEAM_A, "Red & Yellow", listOf(PlayerColor.RED, PlayerColor.YELLOW))
+    val TEAM_B = Team(TeamId.TEAM_B, "Green & Blue", listOf(PlayerColor.GREEN, PlayerColor.BLUE))
+    fun teamFor(color: PlayerColor): Team =
+        if (TEAM_A.contains(color)) TEAM_A else TEAM_B
 }

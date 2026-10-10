@@ -1,0 +1,6 @@
+{
+  "name": "Ludo Kingdom",
+  "description": "Complete offline Ludo board game featuring AI with multiple difficulties, pass-and-play, multiple board themes, custom rules, sound effects, and stats tracking.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
